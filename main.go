@@ -46,8 +46,8 @@ func main() {
 	requestBody := ChatGPTRequest{
 		Model: "gpt-3.5-turbo",
 		Messages: []Message{
-			{Role: "system", Content: "You are a helpful assistant."},
-			{Role: "user", Content: "Hello, how can I use your API?"},
+				{Role: "system", Content: "Будь консультантом полезным, ответ не больше 30 слов"},
+				{Role: "user", Content: "Сколько версий плейстешн существует?"},
 		},
 	}
 

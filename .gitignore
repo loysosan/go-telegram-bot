@@ -19,3 +19,39 @@ crash.log
 !terraform.tfvars.example
 
 config.ini
+
+# Go-specific
+bin/
+build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Dependency directories
+vendor/
+
+# Go module files
+/go.sum
+/go.mod
+
+# IDE and editor-specific
+.idea/
+*.iml
+.vscode/
+*.swp
+*~
+
+# Logs
+*.log
+*.tmp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Other
+config.ini
