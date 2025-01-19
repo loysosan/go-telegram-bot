@@ -35,8 +35,8 @@ build/
 vendor/
 
 # Go module files
-/go.sum
-/go.mod
+go.sum
+go.mod
 
 # IDE and editor-specific
 .idea/
