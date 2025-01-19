@@ -10,27 +10,10 @@ import (
 	"gopkg.in/ini.v1"
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
+	
 )
 
-type ChatGPTRequest struct {
-	Model    string   `json:"model"`
-	Messages []Message `json:"messages"`
-}
-
-type Message struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
-}
-
-type ChatGPTResponse struct {
-	Choices []struct {
-		Message Message `json:"message"`
-	} `json:"choices"`
-}
-
-
 func main() {
-
 
 	// Загружаем конфигурацию
 	cfg, err := ini.Load("config.ini")
