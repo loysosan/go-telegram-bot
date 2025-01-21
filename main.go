@@ -132,3 +132,76 @@ func GetGPTResponse(userInput string) (string, error) {
 	log.Fatalf("no response from assistant")
 	return "", nil
 }
+
+func GenerateImage(prompt string) (string, error) {
+	cfg, err := ini.Load("config.ini")
+	if err != nil {
+		log.Printf("Error loading config.ini: %v", err)
+		return "", err
+	}
+
+	apiKey := cfg.Section("api").Key("key").String()
+	if apiKey == "" {
+		log.Printf("API key not found in config.ini")
+		return "", nil
+	}
+
+	apiURL := "https://api.openai.com/v1/images/generations"
+
+	requestBody := map[string]interface{}{
+		"prompt": prompt,
+		"n":      1,
+		"size":   "1024x1024",
+	}
+
+	requestData, err := json.Marshal(requestBody)
+	if err != nil {
+		log.Printf("Error marshalling request body: %v", err)
+		return "", err
+	}
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(requestData))
+	if err != nil {
+		log.Printf("Error creating request: %v", err)
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("Error sending request: %v", err)
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("Error reading response body: %v", err)
+		return "", err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("Error: status code %d, body: %s", resp.StatusCode, string(body))
+		return "", nil
+	}
+
+	var imageResponse struct {
+		Data []struct {
+			URL string `json:"url"`
+		} `json:"data"`
+	}
+
+	if err := json.Unmarshal(body, &imageResponse); err != nil {
+		log.Printf("Error unmarshalling response: %v", err)
+		return "", err
+	}
+
+	if len(imageResponse.Data) > 0 {
+		return imageResponse.Data[0].URL, nil
+	}
+
+	return "", fmt.Errorf("no image URL returned")
+}
